@@ -6,8 +6,12 @@ authors = [
     {name = "Rashicom",email = "rashid.kp484@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<4.0.0"
 dependencies = [
+    "langchain (>=1.0.3,<2.0.0)",
+    "python-dotenv (>=1.2.1,<2.0.0)",
+    "langchain-community (>=0.4.1,<0.5.0)",
+    "langchain-google-genai (>=3.0.1,<4.0.0)"
 ]
 
 
