@@ -26,11 +26,11 @@ if prompt := st.chat_input("what's up?"):
         # pass the prompt to llm as stream
         for chunk in agent.stream(
             {"messages":[{"role":"user", "content":prompt}]},
+            {"configurable": {"thread_id": "1"}},
             stream_mode="updates"
         ):
             for step, data in chunk.items():
                 data_content = data['messages'][-1].content_blocks[-1]
-                print(step)
 
                 if step == "model":
                     if data_content.get("type") == "tool_call":

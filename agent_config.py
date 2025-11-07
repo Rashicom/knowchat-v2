@@ -3,6 +3,7 @@ from langchain.chat_models import init_chat_model
 from langchain.agents import create_agent
 from dataclasses import dataclass
 from tools import get_weather
+from langgraph.checkpoint.memory import InMemorySaver
 
 
 config = dotenv_values(".env")
@@ -18,5 +19,5 @@ agent = create_agent(
     model=model,
     system_prompt="You are a financial expert chatbot",
     tools=[get_weather],
-    # checkpointer=checkpointer
+    checkpointer=InMemorySaver()
 )
