@@ -1,5 +1,8 @@
 import streamlit as st
 import time
+from agent_config import agent
+import time
+
 
 st.header("KnowChat-V2")
 
@@ -18,12 +21,23 @@ if prompt := st.chat_input("what's up?"):
         st.markdown(prompt)
         st.session_state.messages.append({"role":"user", "content":prompt})
 
-    # pass the prompt to llm as stream
-
     with st.chat_message("bot"):
         status_placeholder = st.empty()
-        for stage in ["thinging","searching","content response"]:
-            status_placeholder.markdown(stage)
-            time.sleep(1)
-        
-        st.session_state.messages.append({"role":"bot", "content":stage})
+        # pass the prompt to llm as stream
+        for chunk in agent.stream(
+            {"messages":[{"role":"user", "content":prompt}]},
+            stream_mode="updates"
+        ):
+            for step, data in chunk.items():
+                data_content = data['messages'][-1].content_blocks[-1]
+                print(step)
+
+                if step == "model":
+                    if data_content.get("type") == "tool_call":
+                        status_placeholder.markdown("Calling tool...")
+                    else:
+                        status_placeholder.markdown(data_content.get("text"))
+                        st.session_state.messages.append({"role":"bot", "content":data_content.get("text")})
+                else:
+                    status_placeholder.markdown("Thinking...")
+                time.sleep(1)
